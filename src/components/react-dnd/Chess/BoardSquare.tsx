@@ -10,6 +10,17 @@ const boardSquareStyle: React.CSSProperties = {
 	height: '100%',
 };
 
+const overlayStyle: React.CSSProperties = {
+	position: 'absolute',
+	top: 0,
+	left: 0,
+	height: '100%',
+	width: '100%',
+	zIndex: 1,
+	opacity: 0.5,
+	backgroundColor: 'yellow',
+}
+
 type Props = {
 	x: number,
 	y: number,
@@ -23,7 +34,10 @@ export const BoardSquare = ({ x, y, children }: Props) => {
 	// useDrop() の返り値は配列で、第一要素にはcollect() 関数が収集した値が入ったオブジェクトを返す
 	// 第二要素は connector() 関数で、これによってドロップ先オブジェクトと対象のDOMを関連づけする
 	// ドロップターゲットのJSXノードのref プロパティに、drag を渡す
-	const [, drop] = useDrop(() => ({
+	const [{ isOver }, drop] = useDrop(() => ({
+		collect: monitor => ({
+			isOver: !!monitor.isOver() // isOver は、ドロップターゲット上にドラッグ中のオブジェクトがあるかどうかを判定する
+		}),
 		accept: ItemTypes.KNIGHT, // dropを受け入れることができるドラッグオブジェクトのtype
 		drop: () => moveKnight([x, y]), // 要素がドロップされたときに実行するコールバック関数
 	}), [x, y]);
@@ -35,6 +49,8 @@ export const BoardSquare = ({ x, y, children }: Props) => {
 			ref={drop}
 			style={boardSquareStyle}
 		>
+			{/* isOver なら、ドロップターゲット要素の色を変える */}
+			{isOver && (<div style={overlayStyle} />)}
 			<Square black={black}>{children}</Square>
 		</div>
 	)
