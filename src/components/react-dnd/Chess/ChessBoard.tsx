@@ -1,5 +1,5 @@
 import React from 'react'
-import { moveKnight } from './Game'
+import { canMoveKnight, moveKnight } from './Game'
 import { Knight } from './Knight'
 import { Square } from './Square'
 import { KnightPosition } from './types'
@@ -22,7 +22,7 @@ const boardStyle: React.CSSProperties = {
 };
 
 const handleSquareClick = ([x, y]: KnightPosition) => {
-	moveKnight([x, y]);
+	canMoveKnight([x, y]) && moveKnight([x, y]);
 };
 
 /**
