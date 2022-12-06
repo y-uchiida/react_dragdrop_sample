@@ -1,7 +1,8 @@
 import { ReactNode } from "react";
 import { useDrop } from "react-dnd";
-import { moveKnight } from "./Game";
+import { canMoveKnight, moveKnight } from "./Game";
 import { ItemTypes } from "./ItemTypes";
+import Overlay from "./Overlay";
 import { Square } from "./Square";
 
 const boardSquareStyle: React.CSSProperties = {
@@ -34,9 +35,11 @@ export const BoardSquare = ({ x, y, children }: Props) => {
 	// useDrop() の返り値は配列で、第一要素にはcollect() 関数が収集した値が入ったオブジェクトを返す
 	// 第二要素は connector() 関数で、これによってドロップ先オブジェクトと対象のDOMを関連づけする
 	// ドロップターゲットのJSXノードのref プロパティに、drag を渡す
-	const [{ isOver }, drop] = useDrop(() => ({
+	const [{ canDrop, isOver }, drop] = useDrop(() => ({
+		canDrop: () => canMoveKnight([x, y]), // ドロップできるかどうかを判定する関数として、canDrop() を作成
 		collect: monitor => ({
-			isOver: !!monitor.isOver() // isOver は、ドロップターゲット上にドラッグ中のオブジェクトがあるかどうかを判定する
+			isOver: !!monitor.isOver(), // isOver は、ドロップターゲット上にドラッグ中のオブジェクトがあるかどうかを判定する
+			canDrop: !!monitor.canDrop() // monitor 経由でcanDrop を呼び出して、collection オブジェクト(返り値の配列の第一要素)に渡す
 		}),
 		accept: ItemTypes.KNIGHT, // dropを受け入れることができるドラッグオブジェクトのtype
 		drop: () => moveKnight([x, y]), // 要素がドロップされたときに実行するコールバック関数
@@ -49,8 +52,10 @@ export const BoardSquare = ({ x, y, children }: Props) => {
 			ref={drop}
 			style={boardSquareStyle}
 		>
-			{/* isOver なら、ドロップターゲット要素の色を変える */}
-			{isOver && (<div style={overlayStyle} />)}
+			{/* ドロップできるかによって、マスの色を変える */}
+			{isOver && !canDrop && <Overlay color="red" />}
+			{!isOver && canDrop && <Overlay color="yellow" />}
+			{isOver && canDrop && <Overlay color="blue" />}
 			<Square black={black}>{children}</Square>
 		</div>
 	)
