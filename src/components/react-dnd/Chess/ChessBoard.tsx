@@ -1,4 +1,5 @@
 import React from 'react'
+import { moveKnight } from './Game'
 import { Knight } from './Knight'
 import { Square } from './Square'
 import { KnightPosition } from './types'
@@ -10,9 +11,6 @@ type Props = {
 const squareStyle: React.CSSProperties = {
 	width: '12.5%',
 	height: '12.5%',
-	display: 'flex',
-	alignItems: 'center',
-	justifyContent: 'center',
 };
 
 const boardStyle: React.CSSProperties = {
@@ -21,6 +19,10 @@ const boardStyle: React.CSSProperties = {
 	border: '1px solid gray',
 	flexWrap: 'wrap',
 	display: 'flex',
+};
+
+const handleSquareClick = ([x, y]: KnightPosition) => {
+	moveKnight([x, y]);
 };
 
 /**
@@ -36,7 +38,7 @@ const generateChessBoard = (i: number, [knightX, knightY]: KnightPosition) => {
 	const isKnightHere = knightX === x && knightY === y;
 	const piece = isKnightHere ? <Knight /> : null;
 	return (
-		<div key={i} style={squareStyle}>
+		<div key={i} style={squareStyle} onClick={() => handleSquareClick([x, y])}>
 			<Square black={black}>{piece}</Square>
 		</div>
 	);

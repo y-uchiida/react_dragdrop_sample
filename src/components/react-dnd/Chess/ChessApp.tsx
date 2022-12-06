@@ -4,7 +4,7 @@ import { observe } from "./Game";
 import { KnightPosition } from "./types";
 
 export const ChessApp = () => {
-	const [knightPosition, setKnightPosition] = useState<KnightPosition>([3, 0]);
+	const [knightPosition, setKnightPosition] = useState<KnightPosition>([100, 100]);
 	const [chessBoard, setChessBoard] = useState<JSX.Element>(<></>);
 
 	const observer = useMemo(() => {
