@@ -36,12 +36,12 @@ const boardStyle: React.CSSProperties = {
 // }
 
 /**
- * チェス盤の要素を生成する
+ * チェス盤のマスの要素を生成する
  * @param i loop counter
  * @param KnightPosition ナイトの駒があるマス 
  * @returns ReactNode
  */
-const generateChessBoard = (i: number, [knightX, knightY]: KnightPosition) => {
+const generateChessSquare = (i: number, [knightX, knightY]: KnightPosition) => {
 	const x = i % 8;
 	const y = Math.floor(i / 8);
 	// const black = (x + y) % 2 === 1;
@@ -59,10 +59,11 @@ const generateChessBoard = (i: number, [knightX, knightY]: KnightPosition) => {
 }
 
 const ChessBoard = ({ knightPosition }: Props) => {
-	const squares = [];
-	for (let i = 0; i < 64; i++) {
-		squares.push(generateChessBoard(i, knightPosition));
-	}
+	// const squares = [];
+	// for (let i = 0; i < 64; i++) {
+	// 	squares.push(generateChessSquare(i, knightPosition));
+	// }
+	const squares = Array.from(new Array(64), (_, i) => generateChessSquare(i, knightPosition));
 	return (
 		<DndProvider backend={HTML5Backend}>
 			<div style={boardStyle}>
