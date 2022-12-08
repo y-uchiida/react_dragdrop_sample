@@ -2,9 +2,7 @@ import React from 'react'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { BoardSquare } from './BoardSquare'
-import { canMoveKnight, moveKnight } from './Game'
 import { Piece } from './Piece'
-import { Square } from './Square'
 import { KnightPosition } from './types'
 
 type Props = {
@@ -24,17 +22,6 @@ const boardStyle: React.CSSProperties = {
 	display: 'flex',
 };
 
-/*
- * const handleSquareClick = ([x, y]: KnightPosition) => {
- * 	canMoveKnight([x, y]) && moveKnight([x, y]);
- * };
- */
-
-// const renderPiece = (x: number, y: number, [knightX, knightY]: KnightPosition) => {
-// 	const isKnightHere = knightX === x && knightY == y;
-// 	return isKnightHere ? <Knight /> : <></>
-// }
-
 /**
  * チェス盤のマスの要素を生成する
  * @param i loop counter
@@ -44,14 +31,10 @@ const boardStyle: React.CSSProperties = {
 const generateChessSquare = (i: number, [knightX, knightY]: KnightPosition) => {
 	const x = i % 8;
 	const y = Math.floor(i / 8);
-	// const black = (x + y) % 2 === 1;
-	// const isKnightHere = knightX === x && knightY === y;
-	// const piece = isKnightHere ? <Knight /> : null;
+
 	return (
-		<div key={i} style={squareStyle} /* onClick={() => handleSquareClick([x, y])}*/ >
-			{/* <Square black={black}>{piece}</Square>	 */}
+		<div key={i} style={squareStyle}>
 			<BoardSquare x={x} y={y}>
-				{/* {renderPiece(x, y, [knightX, knightY])} */}
 				<Piece isKnight={knightX === x && knightY === y} />
 			</BoardSquare>
 		</div>
@@ -59,10 +42,6 @@ const generateChessSquare = (i: number, [knightX, knightY]: KnightPosition) => {
 }
 
 const ChessBoard = ({ knightPosition }: Props) => {
-	// const squares = [];
-	// for (let i = 0; i < 64; i++) {
-	// 	squares.push(generateChessSquare(i, knightPosition));
-	// }
 	const squares = Array.from(new Array(64), (_, i) => generateChessSquare(i, knightPosition));
 	return (
 		<DndProvider backend={HTML5Backend}>
