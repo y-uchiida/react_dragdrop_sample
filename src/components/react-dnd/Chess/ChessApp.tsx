@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import { ChessBoard } from "./ChessBoard";
 import { observe, knightPosition as initialPosition } from "./Game";
 import { KnightPosition } from "./types";
@@ -22,5 +24,9 @@ export const ChessApp = () => {
 	}, [knightPosition]);
 
 
-	return chessBoard;
+	return (
+		<DndProvider backend={HTML5Backend}>
+			{chessBoard}
+		</DndProvider>
+	);
 };
