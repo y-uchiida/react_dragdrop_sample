@@ -3,7 +3,7 @@ import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { BoardSquare } from './BoardSquare'
 import { canMoveKnight, moveKnight } from './Game'
-import { Knight } from './Knight'
+import { Piece } from './Piece'
 import { Square } from './Square'
 import { KnightPosition } from './types'
 
@@ -30,10 +30,10 @@ const boardStyle: React.CSSProperties = {
  * };
  */
 
-const renderPiece = (x: number, y: number, [knightX, knightY]: KnightPosition) => {
-	const isKnightHere = knightX === x && knightY == y;
-	return isKnightHere ? <Knight /> : <></>
-}
+// const renderPiece = (x: number, y: number, [knightX, knightY]: KnightPosition) => {
+// 	const isKnightHere = knightX === x && knightY == y;
+// 	return isKnightHere ? <Knight /> : <></>
+// }
 
 /**
  * チェス盤の要素を生成する
@@ -51,7 +51,8 @@ const generateChessBoard = (i: number, [knightX, knightY]: KnightPosition) => {
 		<div key={i} style={squareStyle} /* onClick={() => handleSquareClick([x, y])}*/ >
 			{/* <Square black={black}>{piece}</Square>	 */}
 			<BoardSquare x={x} y={y}>
-				{renderPiece(x, y, [knightX, knightY])}
+				{/* {renderPiece(x, y, [knightX, knightY])} */}
+				<Piece isKnight={knightX === x && knightY === y} />
 			</BoardSquare>
 		</div>
 	);
