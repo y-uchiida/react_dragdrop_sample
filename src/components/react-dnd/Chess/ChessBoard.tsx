@@ -10,9 +10,9 @@ type Props = {
 }
 
 const wrapperStyle: React.CSSProperties = {
-	width: '100%',
 	display: 'flex',
-	flexDirection: 'column'
+	flexDirection: 'column',
+	alignItems: 'center'
 }
 
 const monitorBoxStyle: React.CSSProperties = {
@@ -20,7 +20,8 @@ const monitorBoxStyle: React.CSSProperties = {
 	border: '1px solid #333',
 	color: '#333',
 	textAlign: 'left',
-	padding: '8px'
+	padding: '8px',
+	width: '500px'
 }
 
 const squareStyle: React.CSSProperties = {

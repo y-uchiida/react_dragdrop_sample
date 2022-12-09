@@ -1,10 +1,12 @@
-import { ChessApp } from "./components/react-dnd/Chess"
 import "./App.css"
+import { NavBar } from "./components/NavBar"
+import { ReactNode } from "react"
 
-function App() {
+function App({ children }: { children?: ReactNode }) {
   return (
     <div className="App">
-      <ChessApp />
+      <NavBar />
+      {children}
     </div>
   )
 }
