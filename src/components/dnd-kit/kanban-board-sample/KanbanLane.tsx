@@ -24,7 +24,7 @@ export const KanbanLane = ({ title, items }: KanbanLaneProps) => {
 				flexDirection="column"
 			>
 				{items.map((item, key) => (
-					<KanbanCard title={item.title} key={key} index={key} parent={title} />
+					<KanbanCard uid={item.uid} title={item.title} key={key} index={key} parent={title} />
 				))}
 			</Flex>
 		</Flex>

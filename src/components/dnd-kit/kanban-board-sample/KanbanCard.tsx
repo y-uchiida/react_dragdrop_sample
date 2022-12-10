@@ -3,12 +3,14 @@ import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 
 type Props = {
+	uid: string,
 	title: string;
 	index: number;
 	parent: string;
 }
 
 export const KanbanCard = ({
+	uid, // タスクの固有識別子(uuid)
 	title, // タスクのタイトル
 	index, // レーンの中での順序
 	parent, // どのレーンに配置するかを、KanbanLane のid で指定する
@@ -22,6 +24,7 @@ export const KanbanCard = ({
 	} = useDraggable({
 		id: title,
 		data: { // data オブジェクトに定義したプロパティは、ドラッグ操作のイベントハンドラで利用できる
+			uid,
 			title,
 			index,
 			parent,

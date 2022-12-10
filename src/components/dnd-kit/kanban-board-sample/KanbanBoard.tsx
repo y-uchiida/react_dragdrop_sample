@@ -16,11 +16,12 @@ export const KanbanBoard = () => {
 	const [uItems, setuItems] = useState<Array<Card>>([]);
 
 	// Unassigned レーンにカードを追加する処理
-	const addNewCard = (title: string) => {
-		setuItems([...uItems, { title }]);
+	const addNewCard = (uid: string, title: string) => {
+		setuItems([...uItems, { uid, title }]);
 	};
 
 	const [droppedContainer, setDroppedContainer] = useState<UniqueIdentifier | undefined>();
+	const [dragItemId, setDragItemId] = useState<string | undefined>();
 	const [dragItemTitle, setDragItemTitle] = useState<string | undefined>();
 	const [dragItemIndex, setDragItemIndex] = useState<number | undefined>();
 	const [dragItemParent, setDragItemParent] = useState<string | undefined>();
@@ -30,6 +31,7 @@ export const KanbanBoard = () => {
 			collisionDetection={rectIntersection}
 			onDragMove={(e) => {
 				setDroppedContainer(e.over?.id);
+				setDragItemId(e.active.data.current?.uid);
 				setDragItemTitle(e.active.data.current?.title);
 				setDragItemIndex(e.active.data.current?.index);
 				setDragItemParent(e.active.data.current?.parent);
@@ -37,21 +39,22 @@ export const KanbanBoard = () => {
 
 			onDragEnd={(e) => {
 				const container = e.over?.id;
+				const CardId = e.active.data.current?.uid ?? "";
 				const title = e.active.data.current?.title ?? "";
 				const index = e.active.data.current?.index ?? 0;
 				const parent = e.active.data.current?.parent ?? "ToDo";
 
 
 				if (container === "ToDo") {
-					setTodoItems([...todoItems, { title }]);
+					setTodoItems([...todoItems, { uid: CardId, title }]);
 				} else if (container === "Done") {
-					setDoneItems([...doneItems, { title }]);
+					setDoneItems([...doneItems, { uid: CardId, title }]);
 				} else if (container === "In Progress") {
-					setInProgressItems([...uItems, { title }]);
+					setInProgressItems([...uItems, { uid: CardId, title }]);
 				} else if (container === "Unassigned") {
-					setuItems([...uItems, { title }]);
+					setuItems([...uItems, { uid: CardId, title }]);
 				} else {
-					setInProgressItems([...inProgressItems, { title }]);
+					setInProgressItems([...inProgressItems, { uid: CardId, title }]);
 				}
 				if (parent === "ToDo") {
 					setTodoItems([
@@ -80,6 +83,7 @@ export const KanbanBoard = () => {
 				</Flex>
 			</Flex>
 			<Box padding={5} fontSize={20} style={infoBoxStyle}>
+				<p>dragItemId: {dragItemId?.toString()}</p>
 				<p>droppedContainer: {droppedContainer?.toString()}</p>
 				<p>dragItemTitle: {dragItemTitle?.toString()}</p>
 				<p>dragItemIndex: {dragItemIndex?.toString()}</p>

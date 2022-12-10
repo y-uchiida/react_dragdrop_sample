@@ -1,13 +1,19 @@
 import { Button, Flex, Input } from '@chakra-ui/react';
 import React, { useState } from 'react'
-
+import { v4 as uuid } from 'uuid';
 
 type Props = {
-	addCard: (title: string) => void;
+	addCard: (id: string, title: string) => void;
 }
 
 export const AddCard = ({ addCard }: Props) => {
 	const [title, setTitle] = useState('');
+
+	const handleButtonClick = () => {
+		const id = uuid();
+		addCard(id, title);
+		setTitle('');
+	}
 
 	return (
 		<Flex p={5} columnGap={4}>
@@ -19,11 +25,8 @@ export const AddCard = ({ addCard }: Props) => {
 			/>
 			<Button colorScheme='green'
 				disabled={!(title.length > 0)}
-				onClick={() => {
-					addCard(title);
-					setTitle('');
-				}}
+				onClick={() => handleButtonClick()}
 			>Add Card</Button>
-		</Flex>
+		</Flex >
 	)
 }
