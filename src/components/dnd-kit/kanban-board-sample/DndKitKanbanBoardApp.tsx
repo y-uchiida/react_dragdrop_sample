@@ -1,10 +1,11 @@
 import { ChakraProvider } from '@chakra-ui/react'
 import React from 'react'
+import { KanbanBoard } from './KanbanBoard'
 
 export const DndKitKanbanBoardApp = () => {
 	return (
 		<ChakraProvider>
-			<h2>dnd-kit Kanban board App sample</h2>
+			<KanbanBoard />
 		</ChakraProvider>
 	)
 }
