@@ -4,6 +4,7 @@ import { AddCard } from "./AddCard";
 import { Box, Flex } from "@chakra-ui/react";
 import { useState } from "react";
 import { Card } from "./types";
+import { itemsEqual } from "@dnd-kit/sortable/dist/utilities";
 
 const infoBoxStyle: React.CSSProperties = {
 	width: 'max-content',
@@ -38,38 +39,34 @@ export const KanbanBoard = () => {
 			}}
 
 			onDragEnd={(e) => {
-				const container = e.over?.id;
-				const CardId = e.active.data.current?.uid ?? "";
-				const title = e.active.data.current?.title ?? "";
-				const index = e.active.data.current?.index ?? 0;
-				const parent = e.active.data.current?.parent ?? "ToDo";
+				const container = e.over?.id.toString();
+				const cardId = e.active.data.current?.uid.toString() ?? "";
+				const title = e.active.data.current?.title.toString() ?? "";
+				const index = e.active.data.current?.index.toString() ?? 0;
+				const parent = e.active.data.current?.parent.toString() ?? "";
 
+				if (container === undefined || parent === container) {
+					return;
+				}
 
 				if (container === "ToDo") {
-					setTodoItems([...todoItems, { uid: CardId, title }]);
+					setTodoItems([...todoItems, { uid: cardId, title }]);
 				} else if (container === "Done") {
-					setDoneItems([...doneItems, { uid: CardId, title }]);
+					setDoneItems([...doneItems, { uid: cardId, title }]);
 				} else if (container === "In Progress") {
-					setInProgressItems([...uItems, { uid: CardId, title }]);
+					setInProgressItems([...uItems, { uid: cardId, title }]);
 				} else if (container === "Unassigned") {
-					setuItems([...uItems, { uid: CardId, title }]);
-				} else {
-					setInProgressItems([...inProgressItems, { uid: CardId, title }]);
+					setuItems([...uItems, { uid: cardId, title }]);
 				}
+
 				if (parent === "ToDo") {
-					setTodoItems([
-						...todoItems.slice(0, index),
-						...todoItems.slice(index + 1),
-					]);
+					setTodoItems((items) => items.filter((item) => item.uid !== cardId));
 				} else if (parent === "Done") {
-					setDoneItems([
-						...doneItems.slice(0, index),
-						...doneItems.slice(index + 1),
-					]);
+					setDoneItems((items) => items.filter((item) => item.uid !== cardId));
 				} else if (parent === "In Progress") {
-					setInProgressItems([...uItems.slice(0, index), ...uItems.slice(index + 1)]);
+					setInProgressItems((items) => items.filter((item) => item.uid !== cardId));
 				} else if (parent === "Unassigned") {
-					setuItems([...uItems.slice(0, index), ...uItems.slice(index + 1)]);
+					setuItems((items) => items.filter((item) => item.uid !== cardId));
 				}
 			}}
 		>
