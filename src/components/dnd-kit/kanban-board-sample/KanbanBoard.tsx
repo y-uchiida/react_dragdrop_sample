@@ -1,5 +1,6 @@
 import { DndContext, rectIntersection } from "@dnd-kit/core";
 import { KanbanLane } from "./KanbanLane";
+import { AddCard } from "./AddCard";
 import { Flex } from "@chakra-ui/react";
 import { useState } from "react";
 import { Card } from "./types";
@@ -9,6 +10,11 @@ export const KanbanBoard = () => {
 	const [doneItems, setDoneItems] = useState<Array<Card>>([]);
 	const [inProgressItems, setInProgressItems] = useState<Array<Card>>([]);
 	const [uItems, setuItems] = useState<Array<Card>>([]);
+
+	// Unassigned レーンにカードを追加する処理
+	const addNewCard = (title: string) => {
+		setuItems([...uItems, { title }]);
+	};
 
 	return (
 		<DndContext
@@ -48,6 +54,7 @@ export const KanbanBoard = () => {
 			}}
 		>
 			<Flex flexDirection="column">
+				<AddCard addCard={addNewCard} />
 				<Flex flex="3">
 					<KanbanLane title="ToDo" items={todoItems} />
 					<KanbanLane title="In Progress" items={inProgressItems} />
