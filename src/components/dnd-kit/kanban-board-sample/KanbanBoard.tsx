@@ -54,7 +54,7 @@ export const KanbanBoard = () => {
 				} else if (container === "Done") {
 					setDoneItems([...doneItems, { uid: cardId, title }]);
 				} else if (container === "In Progress") {
-					setInProgressItems([...uItems, { uid: cardId, title }]);
+					setInProgressItems([...inProgressItems, { uid: cardId, title }]);
 				} else if (container === "Unassigned") {
 					setuItems([...uItems, { uid: cardId, title }]);
 				}
