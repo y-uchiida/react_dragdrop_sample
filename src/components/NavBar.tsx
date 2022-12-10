@@ -15,7 +15,8 @@ export const NavBar = () => {
 		<div style={navBarStyle}>
 			<Link to='dnd-kit-sample' >dnd-kit sample</Link>
 			<Link to='dnd-kit-sortable-sample' >dnd-kit sortable sample</Link>
-			<Link to='react-dnd-chess-sample' >dnd-kit sample</Link>
+			<Link to='dnd-kit-kanban-board-sample' >dnd-kit Kanban board sample</Link>
+			<Link to='react-dnd-chess-sample' >react DnD chess sample</Link>
 		</ div>
 	)
 }

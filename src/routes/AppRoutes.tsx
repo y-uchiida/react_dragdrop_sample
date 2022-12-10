@@ -1,4 +1,5 @@
 import { createBrowserRouter, useRoutes } from "react-router-dom";
+import { DndKitKanbanBoardApp } from "../components/dnd-kit/kanban-board-sample/DndKitKanbanBoardApp";
 import { DndKitSampleApp } from "../components/dnd-kit/sample/DndKitSampleApp";
 import { DndKitSortableSampleApp } from "../components/dnd-kit/sortable";
 import { Layout } from "../components/Layout";
@@ -16,6 +17,10 @@ const routes = [
 			{
 				path: "dnd-kit-sortable-sample",
 				element: <DndKitSortableSampleApp />,
+			},
+			{
+				path: "dnd-kit-kanban-board-sample",
+				element: <DndKitKanbanBoardApp />,
 			},
 			{
 				path: "react-dnd-chess-sample",
