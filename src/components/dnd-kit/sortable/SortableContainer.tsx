@@ -1,6 +1,15 @@
+import { background } from "@chakra-ui/react";
 import { useDroppable } from "@dnd-kit/core";
 import { rectSortingStrategy, SortableContext } from "@dnd-kit/sortable";
+import { CSSProperties } from "react";
 import SortableItem from "./SortableItem";
+
+const droppableAreaStyle: CSSProperties = {
+	width: 'calc(33% - 5px)',
+	background: '#444',
+	borderRadius: 8,
+	padding: 8
+}
 
 const SortableContainer = ({
 	id,
@@ -15,7 +24,7 @@ const SortableContainer = ({
 		id,
 	});
 	return (
-		<div className="w-[calc(33%-5px)]">
+		<div style={droppableAreaStyle}>
 			<h3 className="text-xl font-bold text-center">{label}</h3>
 			<SortableContext id={id} items={items} strategy={rectSortingStrategy}>
 				<div

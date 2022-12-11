@@ -16,6 +16,13 @@ import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import SortableContainer from "./SortableContainer";
 import Item from "./Item";
 
+const wrapperStyle: React.CSSProperties = {
+	display: 'flex',
+	columnGap: 16,
+	padding: 16,
+}
+
+
 const Container = () => {
 	// ドラッグ&ドロップでソート可能なリスト
 	const [items, setItems] = useState<{
@@ -156,7 +163,7 @@ const Container = () => {
 	};
 
 	return (
-		<div className="flex flex-row mx-auto">
+		<div style={wrapperStyle}>
 			<DndContext
 				sensors={sensors}
 				collisionDetection={closestCorners}
