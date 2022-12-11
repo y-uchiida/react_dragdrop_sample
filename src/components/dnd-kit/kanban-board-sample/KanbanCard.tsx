@@ -22,7 +22,7 @@ export const KanbanCard = ({
 		setNodeRef, // DOM とdnd-kit の処理を関連付けするためのref
 		transform // ドラッグ可能なDOM要素の位置とスケールの値を保持するためのオブジェクト
 	} = useDraggable({
-		id: title,
+		id: uid,
 		data: { // data オブジェクトに定義したプロパティは、ドラッグ操作のイベントハンドラで利用できる
 			uid,
 			title,
