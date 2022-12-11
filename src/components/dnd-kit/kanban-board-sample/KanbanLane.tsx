@@ -3,12 +3,13 @@ import { useDroppable } from "@dnd-kit/core";
 import { KanbanCard } from "./KanbanCard";
 import { Card } from "./types";
 
-interface KanbanLaneProps {
+type KanbanLaneProps = {
 	title: string;
 	items: Card[]; // 表示するタスクの一覧
+	removeCard: Function;
 }
 
-export const KanbanLane = ({ title, items }: KanbanLaneProps) => {
+export const KanbanLane = ({ title, items, removeCard }: KanbanLaneProps) => {
 	const { setNodeRef } = useDroppable({
 		id: title, // 受け取ったtitle を、ドロップ先のIDとして利用する
 	});
@@ -23,8 +24,8 @@ export const KanbanLane = ({ title, items }: KanbanLaneProps) => {
 				padding="2"
 				flexDirection="column"
 			>
-				{items.map((item, key) => (
-					<KanbanCard uid={item.uid} title={item.title} key={key} index={key} parent={title} />
+				{items.map((item) => (
+					<KanbanCard uid={item.uid} title={item.title} key={item.uid} parent={title} removeCard={removeCard} />
 				))}
 			</Flex>
 		</Flex>
