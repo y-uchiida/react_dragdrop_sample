@@ -1,9 +1,6 @@
-import { background } from "@chakra-ui/react";
 import { useDroppable } from "@dnd-kit/core";
 import { CSSProperties } from "react";
 import { ScheduleItem } from "./ScheduleItem";
-import { v4 as uuid } from 'uuid';
-
 
 type Props = {
 	id: number

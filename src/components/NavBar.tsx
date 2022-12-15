@@ -8,6 +8,7 @@ const navBarStyle: React.CSSProperties = {
 	textAlign: 'left',
 	fontSize: '16px',
 	columnGap: '8px',
+	height: '40px'
 }
 
 export const NavBar = () => {
