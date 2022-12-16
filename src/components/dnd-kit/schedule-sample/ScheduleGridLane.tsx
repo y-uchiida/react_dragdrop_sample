@@ -9,9 +9,11 @@ type Props = {
 const gridLaneStyle: CSSProperties = {
 	display: 'flex',
 	flexDirection: 'column',
+	position: 'relative',
 	flexGrow: 1,
 	height: 16 * 4 * 24,
-	zIndex: 1
+	zIndex: 1,
+	borderLeft: '1px #666 solid',
 }
 
 export const ScheduleGridLane = ({ id }: Props) => {

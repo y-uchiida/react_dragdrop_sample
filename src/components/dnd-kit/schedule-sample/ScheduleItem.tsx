@@ -10,7 +10,8 @@ type Props = {
 
 const scheduleItemStyle: CSSProperties = {
 	background: '#666',
-	height: 16 * 2
+	height: 16 * 2,
+	userSelect: 'none',
 }
 
 export const ScheduleItem = ({

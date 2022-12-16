@@ -16,21 +16,26 @@ const snapToGridModifier = createSnapModifier(gridSize);
 const scheduleWrapperStyle: CSSProperties = {
 	background: '#333',
 	width: '100%',
+	height: 'calc(100vh - 80px)',
 }
 
 const scheduleGridStyle: CSSProperties = {
 	display: 'flex',
+	position: 'relative',
 	flexDirection: 'row',
 	width: '100%',
+	overflowY: 'scroll',
+	height: 'calc(100vh - 120px)'
 }
 
 export const DndSchedule = () => {
 	return (
-		<DndContext modifiers={[snapToGridModifier]}>
+		<DndContext
+			modifiers={[snapToGridModifier]}
+		>
 			<div style={scheduleWrapperStyle}>
 				<ScheduleHeader />
 				<div style={scheduleGridStyle}>
-					<Spacer width={28} />
 					<ScheduleGutter />
 					{[...new Array(7).keys()].map((i) => {
 						return <ScheduleGridLane key={i} id={i} />

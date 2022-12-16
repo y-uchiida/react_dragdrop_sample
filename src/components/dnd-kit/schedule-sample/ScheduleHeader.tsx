@@ -21,12 +21,13 @@ const headColumnStyle: CSSProperties = {
 export const ScheduleHeader = () => {
 	return (
 		<div style={headWrapStyle}>
-			<Spacer width={28} />
+			<Spacer />
 			{[...Array(7).keys()].map(i => {
 				return <div style={headColumnStyle} key={i}>
 					{dayOfTheWeek[i]}
 				</div>
 			})}
+			<Spacer style={{ width: 16, border: "none" }} />
 		</div>
 	)
 }

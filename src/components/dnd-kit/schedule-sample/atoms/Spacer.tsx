@@ -1,7 +1,7 @@
 import { CSSProperties } from 'react'
 
 type Props = {
-	width?: number | string
+	style?: CSSProperties
 }
 
 const timeSpacerStyle: CSSProperties = {
@@ -10,9 +10,9 @@ const timeSpacerStyle: CSSProperties = {
 }
 
 export const Spacer = (
-	{ width }: Props
+	{ style }: Props
 ) => {
 	return (
-		<div style={{ ...timeSpacerStyle, width }}></div>
+		<div style={{ ...timeSpacerStyle, ...style }}></div>
 	)
 }

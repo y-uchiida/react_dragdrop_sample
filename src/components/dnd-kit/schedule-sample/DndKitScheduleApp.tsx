@@ -9,7 +9,7 @@ const scheduleContainerStyle = {
 export const DndKitScheduleApp = () => {
 	return (
 		<div style={scheduleContainerStyle}>
-			<h2>dnd-kit schedule sample</h2>
+			<h2 style={{ height: '40px' }}>dnd-kit schedule sample</h2>
 			<DndSchedule />
 		</div>
 	)
