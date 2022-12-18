@@ -104,17 +104,25 @@ export const DndSchedule = () => {
 				return scheduleOfDates;
 			}));
 		}
+		clearDragStates();
 	};
+
+	/**
+	 * ドラッグの状態を管理するためのstateをクリアする
+	 */
+	const clearDragStates = () => {
+		setDroppedContainer(undefined);
+		setDragItemId(undefined);
+		setDragItemTitle(undefined);
+		setDragItemParent(undefined);
+	}
 
 	/**
 	 * ドラッグ操作がキャンセルされたときのイベントハンドラ
 	 * ドラッグの状態を管理するために使っていたstateをクリアする
 	 */
 	const dragCancelHandler = () => {
-		setDroppedContainer(undefined);
-		setDragItemId(undefined);
-		setDragItemTitle(undefined);
-		setDragItemParent(undefined);
+		clearDragStates();
 	};
 
 	/** ドラッグ中の要素が別のDroppable 要素に入ったときのイベントハンドラ */
