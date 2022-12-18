@@ -17,8 +17,8 @@ export type Schedule = {
 	uid: UniqueIdentifier,
 	title: string,
 	date: number,
-	// startTime: number,
-	// endTime: number,
+	startTime: number,
+	endTime: number,
 }
 
 export type ScheduleOfDate = {

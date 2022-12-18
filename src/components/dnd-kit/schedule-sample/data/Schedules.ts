@@ -6,6 +6,8 @@ export const initialSchedules = [...Array(7).keys()].map<Schedule>(i => {
 		uid: `schedule-${i}` as UniqueIdentifier,
 		title: `予定-${i}`,
 		date: i,
+		startTime: i * 60,
+		endTime: (i + 1) * 60,
 	}
 });
 

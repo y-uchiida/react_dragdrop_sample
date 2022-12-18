@@ -27,10 +27,12 @@ export const ScheduleGridLane = ({ id, scheduleOfDate }: Props) => {
 		>
 			{scheduleOfDate.schedules !== null && scheduleOfDate.schedules.map(schedule => {
 				return <ScheduleItem
+					key={schedule.uid}
 					uid={schedule.uid.toString()}
 					title={schedule.title}
 					parent={id.toString()}
-					key={schedule.uid}
+					startTime={schedule.startTime}
+					endTime={schedule.endTime}
 				/>
 			})}
 		</div>
