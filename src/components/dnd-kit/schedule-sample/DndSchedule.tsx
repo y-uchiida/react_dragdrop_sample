@@ -1,5 +1,5 @@
 import { Spacer } from './atoms/Spacer'
-import { DndContext, DragOverlay, UniqueIdentifier } from '@dnd-kit/core';
+import { CancelDrop, DndContext, DragEndEvent, DragMoveEvent, DragOverEvent, DragOverlay, DragStartEvent, UniqueIdentifier } from '@dnd-kit/core';
 import {
 	restrictToVerticalAxis,
 	createSnapModifier,
@@ -9,6 +9,8 @@ import { CSSProperties, useState } from 'react';
 import { ScheduleGridLane } from './ScheduleGridLane';
 import { ScheduleGutter } from './ScheduleGutter';
 import { ScheduleHeader } from './ScheduleHeader';
+import { Schedule, ScheduleOfDate, } from './types';
+import { initialScheduleOfDate, initialSchedules } from './data/Schedules';
 
 const gridSize = 16; // pixels
 const snapToGridModifier = createSnapModifier(gridSize);
@@ -43,21 +45,91 @@ export const DndSchedule = () => {
 	const [dragItemTitle, setDragItemTitle] = useState<string | undefined>();
 	const [dragItemParent, setDragItemParent] = useState<string | undefined>();
 
+	const [schedules, setSchedules] = useState<Schedule[]>(initialSchedules);
+	const [scheduleOfDates, setScheduleOfDates] = useState<ScheduleOfDate[]>(initialScheduleOfDate);
+
+
+	/** ドラッグ開始時のイベントハンドラ */
+	const dragStartHandler = (e: DragStartEvent) => {
+
+	};
+
+	/** ドラッグのたびに発火するするイベントのハンドラ */
+	const dragMoveHandler = (e: DragMoveEvent) => {
+		setDroppedContainer(e.over?.id);
+		setDragItemId(e.active.data.current?.uid);
+		setDragItemTitle(e.active.data.current?.title);
+		setDragItemParent(e.active.data.current?.parent);
+	};
+
+	/** D&D終了時、予定を別の日付(Lane)に移動すべきかどうかを判定する */
+	const shouldMoveLane = (e: DragEndEvent) => {
+		if (
+			e.active.data.current?.parent === undefined ||
+			e.over?.id === undefined) {
+			return false;
+		}
+		if (e.active.data.current?.parent == e.over?.id) {
+			return false;
+		}
+		return true;
+	}
+
+	/** ドラッグ終了時のイベントハンドラ */
+	const dragEndHandler = (e: DragEndEvent) => {
+		if (shouldMoveLane(e)) {
+			const destDateId = Number(e.over!.id);
+			setScheduleOfDates((scheduleOfDates => {
+				// 1. 元の日付からschedule itemを消す
+				scheduleOfDates = scheduleOfDates.map(scheduleOfDate => {
+					return {
+						uid: scheduleOfDate.uid,
+						schedules: scheduleOfDate.schedules ?
+							scheduleOfDate.schedules.filter(schedule => schedule.uid != e.active.data.current!.uid) : []
+					}
+				});
+				// 2. 移動先の日付にschedule itemを追加
+				const draggedSchedule = schedules.find(schedule => schedule.uid == e.active.data.current?.uid);
+				if (draggedSchedule) {
+					scheduleOfDates[destDateId].schedules?.push(draggedSchedule);
+					setSchedules(schedules => {
+						return schedules.map(schedule => {
+							if (schedule.uid == draggedSchedule.uid) {
+								schedule.date = destDateId;
+							}
+							return schedule;
+						})
+					});
+				}
+				return scheduleOfDates;
+			}));
+		}
+	};
+
+	/**
+	 * ドラッグ操作がキャンセルされたときのイベントハンドラ
+	 * ドラッグの状態を管理するために使っていたstateをクリアする
+	 */
+	const dragCancelHandler = () => {
+		setDroppedContainer(undefined);
+		setDragItemId(undefined);
+		setDragItemTitle(undefined);
+		setDragItemParent(undefined);
+	};
+
+	/** ドラッグ中の要素が別のDroppable 要素に入ったときのイベントハンドラ */
+	const dragOver = (e: DragOverEvent) => {
+		console.log('onDragOver triggered');
+	};
+
 	return (
 		<DndContext
 			modifiers={[snapToGridModifier]}
-
-			/* ドラッグのたびに発火するするイベントのハンドラ */
-			onDragMove={(e) => {
-				setDroppedContainer(e.over?.id);
-				setDragItemId(e.active.data.current?.uid);
-				setDragItemTitle(e.active.data.current?.title);
-				setDragItemParent(e.active.data.current?.parent);
-			}}
-
-
-			/* ドラッグ終了時のイベントハンドラ */
-			onDragEnd={(e) => { }}
+			onDragStart={dragStartHandler}
+			onDragMove={dragMoveHandler}
+			onDragOver={dragOver}
+			onDragEnd={dragEndHandler}
+			onDragCancel={dragCancelHandler}
 		>
 			<div style={dndInfoBoxStyle}>
 				<p>dragItemId: {dragItemId?.toString()}</p>
@@ -70,7 +142,7 @@ export const DndSchedule = () => {
 				<div style={scheduleGridStyle}>
 					<ScheduleGutter />
 					{[...new Array(7).keys()].map((i) => {
-						return <ScheduleGridLane key={i} id={i} />
+						return <ScheduleGridLane key={i} id={i} scheduleOfDate={scheduleOfDates[i]} />
 					})}
 				</div>
 				<DragOverlay modifiers={[restrictToWindowEdges]}>

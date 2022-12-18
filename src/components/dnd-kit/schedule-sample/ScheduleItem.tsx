@@ -50,7 +50,7 @@ export const ScheduleItem = ({
 			{...attributes}
 			ref={setNodeRef}
 		>
-			{title}({uid})
+			{title}
 		</div>
 	)
 }

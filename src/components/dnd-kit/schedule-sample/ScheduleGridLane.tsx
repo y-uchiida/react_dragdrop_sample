@@ -1,9 +1,11 @@
-import { useDroppable } from "@dnd-kit/core";
+import { UniqueIdentifier, useDroppable } from "@dnd-kit/core";
 import { CSSProperties } from "react";
 import { ScheduleItem } from "./ScheduleItem";
+import { ScheduleOfDate } from "./types";
 
 type Props = {
-	id: number
+	id: UniqueIdentifier,
+	scheduleOfDate: ScheduleOfDate,
 }
 
 const gridLaneStyle: CSSProperties = {
@@ -16,18 +18,21 @@ const gridLaneStyle: CSSProperties = {
 	borderLeft: '1px #666 solid',
 }
 
-export const ScheduleGridLane = ({ id }: Props) => {
+export const ScheduleGridLane = ({ id, scheduleOfDate }: Props) => {
 	const { setNodeRef } = useDroppable({ id, });
 	return (
 		<div
 			style={gridLaneStyle}
 			ref={setNodeRef}
 		>
-			<ScheduleItem
-				uid={id.toString()}
-				title='schedule'
-				parent={id.toString()}
-			></ScheduleItem>
+			{scheduleOfDate.schedules !== null && scheduleOfDate.schedules.map(schedule => {
+				return <ScheduleItem
+					uid={schedule.uid.toString()}
+					title={schedule.title}
+					parent={id.toString()}
+					key={schedule.uid}
+				/>
+			})}
 		</div>
 	)
 }
