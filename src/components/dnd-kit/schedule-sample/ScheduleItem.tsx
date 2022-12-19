@@ -1,7 +1,8 @@
-import { CSSProperties } from "react";
+import { CSSProperties, useState } from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import styled from '@emotion/styled';
+import { StretchHandle } from "./StretchHandle";
 
 type Props = {
 	uid: string,
@@ -57,7 +58,6 @@ const ScheduleItemElm = styled.div<ScheduleItemElmProps>`
 	height: ${props => { return `${calcHightPixel(props.startTime, props.endTime)}px` }};
 `;
 
-
 export const ScheduleItem = ({
 	uid, // タスクの固有識別子(uuid)
 	title, // タスクのタイトル
@@ -89,8 +89,12 @@ export const ScheduleItem = ({
 		touchAction: 'none'
 	};
 
+	const [pointerOn, setPointerOn] = useState(false);
+
 	return (
 		<ScheduleItemElm
+			onMouseOver={() => setPointerOn(true)}
+			onMouseOut={() => setPointerOn(false)}
 			style={{ ...scheduleItemStyle, ...style }} // ドラッグ操作による位置変更を反映するため、transform 属性に値を渡す
 			{...listeners}
 			{...attributes}
@@ -99,6 +103,10 @@ export const ScheduleItem = ({
 			endTime={endTime}
 		>
 			{title}
+			{true && <>
+				<StretchHandle type='start'></StretchHandle>
+				<StretchHandle type='end'></StretchHandle>
+			</>}
 		</ScheduleItemElm>
 	)
 }
