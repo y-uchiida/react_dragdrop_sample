@@ -89,13 +89,10 @@ export function DndSchedule() {
 	const shouldMoveTime = (e: DragEndEvent | DragMoveEvent): boolean => {
 		const updatedStartTime = e.active.data.current?.startTime + pixelToMinute(e.delta.y);
 		const updatedEndTime = e.active.data.current?.endTime + pixelToMinute(e.delta.y);
-
-		console.log(updatedEndTime);
 		if (updatedStartTime < 0 || updatedEndTime < 0) {
 			return false;
 		}
 		if (updatedStartTime > 24 * 60 || updatedEndTime > 24 * 60) {
-			console.log('invalid');
 			return false;
 		}
 		if (updatedStartTime > updatedEndTime) {
