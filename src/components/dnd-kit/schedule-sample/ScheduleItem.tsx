@@ -6,8 +6,9 @@ import {
 	createSnapModifier,
 	restrictToVerticalAxis
 } from "@dnd-kit/modifiers";
-import { calcHightPixel, calcTopPixel } from "./utils/schedulePositionCalc";
+import { calcHightPixel, calcTopPixel, pixelToMinute } from "./utils/schedulePositionCalc";
 import { Schedule } from "./types";
+import { getTimeByMinutes, getTimeStringByMinutes } from "./utils/scheduleTimeCalc";
 
 
 const gridSize = 16; // pixels
@@ -41,8 +42,8 @@ const ScheduleItemElm = styled.div<ScheduleItemElmProps>`
 `;
 
 const calcStretchTime = (e: DragMoveEvent) => {
-	const start = e.active.data.current?.type === 'start' ? e.delta.y : 0;
-	const end = e.active.data.current?.type === 'end' ? e.delta.y : 0;
+	const start = e.active.data.current?.type === 'start' ? pixelToMinute(e.delta.y) : 0;
+	const end = e.active.data.current?.type === 'end' ? pixelToMinute(e.delta.y) : 0;
 	return { start, end };
 }
 
@@ -149,6 +150,9 @@ export const ScheduleItem = ({
 		setStretchingTime({ start: 0, end: 0 });
 	};
 
+	const start = getTimeStringByMinutes(startTime + stretchingTime.start);
+	const end = getTimeStringByMinutes(endTime + stretchingTime.end);
+
 	return (
 		<DndContext
 			modifiers={[snapToGridModifier, restrictToVerticalAxis]}
@@ -166,7 +170,10 @@ export const ScheduleItem = ({
 				startTime={startTime + stretchingTime.start}
 				endTime={endTime + stretchingTime.end}
 			>
-				<p style={{ height: 0 }}>{title}</p>
+				<div style={{ height: 0 }}>
+					<p>{title}</p>
+					<p>{`${start} - ${end}`}</p>
+				</div>
 				{true && <>
 					<StretchHandle
 						type='start'

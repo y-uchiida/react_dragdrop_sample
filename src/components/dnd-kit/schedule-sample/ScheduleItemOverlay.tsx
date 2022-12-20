@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import React, { CSSProperties } from 'react'
 import { calcHightPixel } from "./utils/schedulePositionCalc";
+import { getTimeStringByMinutes } from './utils/scheduleTimeCalc';
 
 
 type Props = {
@@ -22,16 +23,22 @@ const ScheduleItemOverlayElm = styled.div<ScheduleItemOverlayElmProps>`
 	height: ${props => { return `${calcHightPixel(props.startTime, props.endTime)}px` }};
 `;
 
-
 export const ScheduleItemOverlay = (
 	{ title, startTime, endTime }: Props
 ) => {
+
+	const start = getTimeStringByMinutes(startTime);
+	const end = getTimeStringByMinutes(endTime);
+
 	return (
 		<ScheduleItemOverlayElm
 			startTime={startTime}
 			endTime={endTime}
 		>
-			{title}
+			<div style={{ height: 0 }}>
+				<p>{title}</p>
+				<p>{`${start} - ${end}`}</p>
+			</div>
 		</ScheduleItemOverlayElm>
 	)
 }

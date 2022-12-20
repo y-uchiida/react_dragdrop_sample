@@ -25,3 +25,14 @@ export const calcHightPixel = (startTime: number, endTime: number) => {
 	}
 	return Math.round((endTime - startTime) / 15) * 16;
 }
+
+/**
+ * ピクセル数から、分数を算出する
+ * 16ピクセルにつき15分増加する
+ * 
+ * @param pixel 移動したピクセル数
+ * @returns minute 時間
+ */
+export const pixelToMinute = (pixel: number) => {
+	return Math.floor(pixel / 16) * 15;
+}

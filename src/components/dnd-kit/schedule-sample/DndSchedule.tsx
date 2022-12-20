@@ -17,6 +17,7 @@ import { ScheduleHeader } from './ScheduleHeader';
 import { Schedule, ScheduleOfDate } from './types';
 import { initialScheduleOfDate, initialSchedules } from './data/Schedules';
 import { ScheduleItemOverlay } from './ScheduleItemOverlay';
+import { pixelToMinute } from './utils/schedulePositionCalc';
 
 const gridSize = 16; // pixels
 const snapToGridModifier = createSnapModifier(gridSize);
@@ -81,7 +82,7 @@ export function DndSchedule() {
 		const draggedSchedule = schedules.find((schedule) => schedule.uid == e.active.data.current?.uid);
 		if (draggedSchedule) {
 			// ドラッグ操作での時刻変化量を分で表現
-			const moveAmountTime = (e.delta.y / 16) * 15;
+			const moveAmountTime = pixelToMinute(e.delta.y);
 			// const startTime = getTimeByMinutes(draggedSchedule.startTime);
 			// const changedStartTime = getTimeByMinutes(draggedSchedule.startTime + moveAmountTime);
 			// console.log('startTime: ', `${startTime.hour}:${startTime.minute}`);
@@ -131,7 +132,6 @@ export function DndSchedule() {
 
 	/** ドラッグ終了時のイベントハンドラ */
 	const dragEndHandler = (e: DragEndEvent) => {
-		// console.log(e.delta.y);
 		updateScheduleTime(e);
 		if (shouldMoveLane(e)) {
 			updateScheduleDate(e);
@@ -159,14 +159,7 @@ export function DndSchedule() {
 		// console.log('onDragOver triggered');
 	};
 
-	/**
-	 * 0時0分からの経過分数をとり、hour(時)とminute(分)を返す
-	 */
-	const getTimeByMinutes = (minutes: number): { hour: number, minute: number } => {
-		const hour = Math.floor(minutes / 60);
-		const minute = minutes % 60;
-		return { hour, minute };
-	};
+	const moveAmountTime = dragMoveEvent !== undefined ? pixelToMinute(dragMoveEvent.delta.y) : 0;
 
 	return (
 		<DndContext
@@ -211,8 +204,8 @@ export function DndSchedule() {
 				</div>
 				<DragOverlay modifiers={[restrictToWindowEdges]}>
 					<ScheduleItemOverlay
-						startTime={dragMoveEvent?.active.data.current?.startTime}
-						endTime={dragMoveEvent?.active.data.current?.endTime}
+						startTime={dragMoveEvent?.active.data.current?.startTime + moveAmountTime}
+						endTime={dragMoveEvent?.active.data.current?.endTime + moveAmountTime}
 						title={dragMoveEvent?.active.data.current?.title.toString()}
 					/>
 				</DragOverlay>
