@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import React, { CSSProperties } from 'react'
 import { calcHightPixel } from "./utils/schedulePositionCalc";
 import { getTimeStringByMinutes } from './utils/scheduleTimeCalc';
 

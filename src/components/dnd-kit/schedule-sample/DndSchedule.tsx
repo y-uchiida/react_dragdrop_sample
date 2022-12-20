@@ -9,6 +9,7 @@ import {
 import {
 	createSnapModifier,
 	restrictToWindowEdges,
+	restrictToFirstScrollableAncestor
 } from '@dnd-kit/modifiers';
 import { CSSProperties, useState } from 'react';
 import { ScheduleGridLane } from './ScheduleGridLane';
@@ -58,7 +59,9 @@ export function DndSchedule() {
 
 	/** ドラッグのたびに発火するするイベントのハンドラ */
 	const dragMoveHandler = (e: DragMoveEvent) => {
-		setDragMoveEvent(e);
+		if (shouldMoveTime(e)) {
+			setDragMoveEvent(e);
+		}
 	};
 
 	/** D&D終了時、予定を別の日付(Lane)に移動すべきかどうかを判定する */
@@ -73,6 +76,33 @@ export function DndSchedule() {
 		}
 		return true;
 	};
+
+	/**
+	 * ドラッグ終了時のスケジュールの時刻が適切かどうかを判定する  
+	 * 以下の場合は不適切な値として、false を返す  
+	 * - 終了時刻が開始時刻よりも前の時間になっているとき  
+	 * - 開始時刻・終了時刻が0時より小さいとき  
+	 * - 開始時刻・終了時刻が24時より大きいとき  
+	 * 
+	 * @returns boolean
+	 */
+	const shouldMoveTime = (e: DragEndEvent | DragMoveEvent): boolean => {
+		const updatedStartTime = e.active.data.current?.startTime + pixelToMinute(e.delta.y);
+		const updatedEndTime = e.active.data.current?.endTime + pixelToMinute(e.delta.y);
+
+		console.log(updatedEndTime);
+		if (updatedStartTime < 0 || updatedEndTime < 0) {
+			return false;
+		}
+		if (updatedStartTime > 24 * 60 || updatedEndTime > 24 * 60) {
+			console.log('invalid');
+			return false;
+		}
+		if (updatedStartTime > updatedEndTime) {
+			return false;
+		}
+		return true;
+	}
 
 	/**
 	 * ドラッグ操作に合わせて、スケジュールの開始時刻・終了時刻を変更する
@@ -132,6 +162,10 @@ export function DndSchedule() {
 
 	/** ドラッグ終了時のイベントハンドラ */
 	const dragEndHandler = (e: DragEndEvent) => {
+		if (shouldMoveTime(e) == false) {
+			clearDragStates();
+			return;
+		}
 		updateScheduleTime(e);
 		if (shouldMoveLane(e)) {
 			updateScheduleDate(e);
@@ -202,7 +236,7 @@ export function DndSchedule() {
 					<ScheduleGutter />
 					{[...new Array(7).keys()].map((i) => <ScheduleGridLane key={i} id={i} setSchedules={setSchedules} scheduleOfDate={scheduleOfDates[i]} />)}
 				</div>
-				<DragOverlay modifiers={[restrictToWindowEdges]}>
+				<DragOverlay modifiers={[restrictToWindowEdges, restrictToFirstScrollableAncestor]}>
 					<ScheduleItemOverlay
 						startTime={dragMoveEvent?.active.data.current?.startTime + moveAmountTime}
 						endTime={dragMoveEvent?.active.data.current?.endTime + moveAmountTime}

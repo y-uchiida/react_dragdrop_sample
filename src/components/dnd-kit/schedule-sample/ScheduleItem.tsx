@@ -132,8 +132,23 @@ export const ScheduleItem = ({
 	const dragStartHandler = (e: DragStartEvent) => {
 	};
 
-	/** ドラッグのたびに発火するイベントのハンドラ */
+	/**
+	 * ドラッグのたびに発火するイベントのハンドラ
+	 * 移動後のカーソルの位置に合わせて、開始時刻と終了時刻のstateを更新する
+	 * 欄外まで移動している場合は更新しない 
+	 */
 	const dragMoveHandler = (e: DragMoveEvent) => {
+		const updatedStartTime = startTime + pixelToMinute(e.delta.y);
+		const updatedEndTime = endTime + pixelToMinute(e.delta.y);
+		if (updatedStartTime < 0 || updatedEndTime < 0) {
+			return;
+		}
+		if (updatedStartTime > 24 * 60 || updatedEndTime > 24 * 60) {
+			return;
+		}
+		if (updatedStartTime > updatedEndTime) {
+			return;
+		}
 		setStretchingTime(calcStretchTime(e));
 	};
 
